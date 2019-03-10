@@ -37,32 +37,32 @@ function salesDisplay(){
             if(err) throw err;
             console.log(`ID    |  Department Name      |  Over Head Cost    | Product Sales     | Total Profit   
             ----------------------------------------------------------------------------------------------------\n`)
-                        for (let i=0; i<res.length; i++){
-                            let id=JSON.stringify(res[i].id);
-                            let name= res[i].department_name;
-                            let overHead= JSON.stringify(res[i].over_head_costs);
-                            let sales= JSON.stringify(res[i].product_sales);
-                            let total= JSON.stringify(res[i].product_sales-res[i].over_head_costs);
-                            while(id.length<9){
-                                id= id+" ";
-                            };
-                            while(name.length<30){
-                                name= name+" ";
-                            };
-                            while(overHead.length<26){
-                                overHead= overHead+" ";
-                            };
-                            while(sales.length<12){
-                                sales= sales+" ";
-                            };
-                            while(total.length<10){
-                                total= total+" ";
-                            };
-                            console.log(`${id}${name}${overHead}${sales}${total}`);
-                        };
-                        connection.end();
-        })
-}
+                for (let i=0; i<res.length; i++){
+                    let id=JSON.stringify(res[i].id);
+                    let name= res[i].department_name;
+                    let overHead= JSON.stringify(res[i].over_head_costs);
+                    let sales= JSON.stringify(res[i].product_sales);
+                    let total= JSON.stringify(res[i].product_sales-res[i].over_head_costs);
+                    while(id.length<9){
+                        id= id+" ";
+                    };
+                    while(name.length<30){
+                        name= name+" ";
+                    };
+                    while(overHead.length<26){
+                        overHead= overHead+" ";
+                    };
+                    while(sales.length<12){
+                        sales= sales+" ";
+                    };
+                    while(total.length<10){
+                        total= total+" ";
+                    };
+                    console.log(`${id}${name}${overHead}${sales}${total}`);
+                };
+            connection.end();
+        });
+};
 
 function addDepartment(){
     inquirer.prompt([
