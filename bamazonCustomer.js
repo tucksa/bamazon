@@ -1,4 +1,5 @@
 const mysql= require("mysql");
+const inquirer = require("inquirer");
 
 const connection= mysql.createConnection({
     host: "localhost",
@@ -41,7 +42,44 @@ function productDisplay(){
                     quantity= quantity+" ";
                 };
                 console.log(`${id}${name}${department}${price}${quantity}`);
-            };     
+            };
+            buy();
+    });
+};
+
+function buy(){
+    inquirer.prompt([
+        {
+            name:"whatID",
+            type: "input",
+            message: "What is the ID of the item you would like to buy?"
+        },
+        {
+            name:"quantity",
+            type: "input",
+            message: "How many would you like to get?"
+        }
+    ]).then(function(ans){
+        connection.query("SELECT * FROM products WHERE ID= " + ans.whatID, function(err, res){
+            if (err) throw err;
+            console.log(res[0].stock_quantity);
+            console.log(ans.quantity);
+           if(ans.quantity<= res[0].stock_quantity){
+               connection.query(
+                   "UPDATE products SET ? WHERE ?",
+                   [
+                       {stock_quantity: res[0].stock_quantity-ans.quantity},
+                       {id: ans.whatID}
+                   ],
+                   function(err){
+                       if (err) throw err;
+                   }
+               )
+                console.log("Thank you for your purchase! Your total comes to "+ res[0].price*ans.quantity);
+           }else{
+               console.log("Sorry, insufficient quantity...");
+           }
+        })
         connection.end();
     });
-}
+};
