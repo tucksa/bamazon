@@ -39,26 +39,30 @@ function start(){
 function productDisplay(){
     connection.query("SELECT * FROM products", function(err, res){
         if(err) throw err;
-        console.log(`ID    |  Product Name      |  Price  |  Stock Quantity
------------------------------------------------------------------------------\n`)
+        console.log(`ID    |  Product Name      |  Price  |  Stock Quantity | Product Sales
+------------------------------------------------------------------------------------\n`)
             for (let i=0; i<res.length; i++){
                 let id=JSON.stringify(res[i].id);
                 let name= res[i].product_name;
                 let price= JSON.stringify(res[i].price);
                 let quantity= JSON.stringify(res[i].stock_quantity);
+                let sales= JSON.stringify(res[i].product_sales)
                 while(id.length<9){
                     id= id+" ";
                 };
                 while(name.length<20){
                     name= name+" ";
                 };
-                while(price.length<12){
+                while(price.length<15){
                     price= price+" ";
                 };
-                while(quantity.length<10){
+                while(quantity.length<18){
                     quantity= quantity+" ";
                 };
-                console.log(`${id}${name}${price}${quantity}`);
+                while(sales.length<10){
+                    sales= sales+" ";
+                };
+                console.log(`${id}${name}${price}${quantity}${sales}`);
             };
         connection.end();
     });
@@ -67,26 +71,30 @@ function productDisplay(){
 function lowInventoryDisplay(){
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res){
         if(err) throw err;
-        console.log(`ID    |  Product Name      |  Price  |  Stock Quantity
+        console.log(`ID    |  Product Name      |  Price  |  Stock Quantity | Product Sales
 -----------------------------------------------------------------------------\n`)
             for (let i=0; i<res.length; i++){
                 let id=JSON.stringify(res[i].id);
                 let name= res[i].product_name;
                 let price= JSON.stringify(res[i].price);
                 let quantity= JSON.stringify(res[i].stock_quantity);
+                let sales= JSON.stringify(res[i].product_sales);
                 while(id.length<9){
                     id= id+" ";
                 };
                 while(name.length<20){
                     name= name+" ";
                 };
-                while(price.length<12){
+                while(price.length<15){
                     price= price+" ";
                 };
-                while(quantity.length<10){
+                while(quantity.length<18){
                     quantity= quantity+" ";
                 };
-                console.log(`${id}${name}${price}${quantity}`);
+                while(sales.length<10){
+                    sales= sales+" ";
+                };
+                console.log(`${id}${name}${price}${quantity}${sales}`);
             };
         connection.end();
     });
@@ -148,8 +156,8 @@ function addProduct(){
             message: "How many do we have?"
         }
     ]).then(function(ans){
-        connection.query("INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ("
-        + "'"+ans.productName +"', '"+ ans.departmentName + "', "+ ans.price+", "+ ans.stockQuantity+")", 
+        connection.query("INSERT INTO products (product_name, department_name, price, stock_quantity, product_sales) VALUES ("
+        + "'"+ans.productName +"', '"+ ans.departmentName + "', "+ ans.price+", "+ ans.stockQuantity+", 0)", 
         function(err){
             if (err) throw err;
             console.log("You have successfully added this product to the inventory!");

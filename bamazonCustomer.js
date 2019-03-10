@@ -16,9 +16,9 @@ connection.connect(function(err){
 });
 
 function productDisplay(){
-    connection.query("SELECT * FROM products", function(err, res){
+    connection.query("SELECT id, product_name, department_name, price, stock_quantity FROM products", function(err, res){
         if(err) throw err;
-        console.log(`ID    |  Product Name      |  Department Name        |  Price  |  Stock Quantity
+        console.log(`ID    |  Product Name      |  Department Name        |  Price  |  Stock Quantity   
 ----------------------------------------------------------------------------------------------\n`)
             for (let i=0; i<res.length; i++){
                 let id=JSON.stringify(res[i].id);
@@ -43,6 +43,7 @@ function productDisplay(){
                 };
                 console.log(`${id}${name}${department}${price}${quantity}`);
             };
+            console.log("\n\n");
             buy();
     });
 };
@@ -62,24 +63,24 @@ function buy(){
     ]).then(function(ans){
         connection.query("SELECT * FROM products WHERE ID= " + ans.whatID, function(err, res){
             if (err) throw err;
-            console.log(res[0].stock_quantity);
-            console.log(ans.quantity);
+            const sale= res[0].price*ans.quantity;
            if(ans.quantity<= res[0].stock_quantity){
                connection.query(
-                   "UPDATE products SET ? WHERE ?",
+                   "UPDATE products SET ?, ? WHERE ?",
                    [
                        {stock_quantity: res[0].stock_quantity-ans.quantity},
+                       {product_sales:res[0].product_sales+sale},
                        {id: ans.whatID}
                    ],
                    function(err){
                        if (err) throw err;
                    }
                )
-                console.log("Thank you for your purchase! Your total comes to "+ res[0].price*ans.quantity);
+                console.log("Thank you for your purchase! Your total comes to "+ sale);
            }else{
                console.log("Sorry, insufficient quantity...");
            }
-        })
-        connection.end();
+           connection.end();
+        });
     });
 };
